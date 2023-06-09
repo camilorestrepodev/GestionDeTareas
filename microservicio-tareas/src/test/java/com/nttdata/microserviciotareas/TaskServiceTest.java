@@ -20,6 +20,6 @@ class TaskServiceTest {
 
     @Test
     void createTask(){
-
+        Task task = new Task();
     }
 }
