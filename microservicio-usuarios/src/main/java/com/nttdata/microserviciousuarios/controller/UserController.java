@@ -11,10 +11,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -22,8 +24,11 @@ import java.util.List;
 @Tag(name = "Usuarios", description = "Operaciones relacionadas con la gestión de usuarios")
 public class UserController {
 
-    @Autowired
     UserService userService;
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @Operation(summary = "Obtener todos los usuarios", description = "Obtiene todos los usuarios de la aplicación")
     @ApiResponses(value = {
@@ -93,4 +98,16 @@ public class UserController {
         return userService.getByUserId(userId);
     }
 
+    @Operation(summary = "Obtener tareas por rango de fechas de creación")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK - Lista de tareas encontradas"),
+            @ApiResponse(responseCode = "400", description = "Solicitud incorrecta - Rango de fechas inválido")
+    })
+    @GetMapping("/date-range")
+    public List<Task> getTasksByCreationDateRange(
+            @RequestParam("start-date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("end-date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+    ) {
+        return userService.getTasksByCreationDateRange(startDate, endDate);
+    }
 }
