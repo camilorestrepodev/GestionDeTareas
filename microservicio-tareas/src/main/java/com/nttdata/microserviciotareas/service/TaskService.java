@@ -6,6 +6,7 @@ import com.nttdata.microserviciotareas.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -36,6 +37,7 @@ public class TaskService {
     public Task updateTask(Long id, Task updatedTask) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new ApiRequestException("Tarea no encontrada con ID: " + id));
+        task.setTitle(updatedTask.getTitle());
         task.setDescription(updatedTask.getDescription());
         task.setCreationDate(updatedTask.getCreationDate());
         return taskRepository.save(task);
@@ -45,6 +47,9 @@ public class TaskService {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new ApiRequestException("Tarea no encontrada con ID: " + id));
         taskRepository.delete(task);
+    }
+    public List<Task> getTasksByCreationDateRange(LocalDate startDate, LocalDate endDate) {
+        return taskRepository.findByCreationDateRange(startDate, endDate);
     }
 
     public List<Task> findByUserId(Integer userId){

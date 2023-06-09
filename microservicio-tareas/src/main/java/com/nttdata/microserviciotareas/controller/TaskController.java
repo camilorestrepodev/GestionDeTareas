@@ -10,10 +10,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -86,6 +88,24 @@ public class TaskController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "Obtener tareas por rango de fechas de creación")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK - Lista de tareas encontradas"),
+            @ApiResponse(responseCode = "400", description = "Solicitud incorrecta - Rango de fechas inválido")
+    })
+    @GetMapping("/date-range")
+    public List<Task> getTasksByCreationDateRange(
+            @RequestParam("start-date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("end-date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+    ) {
+        return taskService.getTasksByCreationDateRange(startDate, endDate);
+    }
+
+    @Operation(summary = "Obtener tareas por ID de usuario")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK - Lista de tareas encontradas"),
+            @ApiResponse(responseCode = "404", description = "No encontrado - Usuario no existe")
+    })
     @GetMapping("/byuser/{userId}")
     public ResponseEntity<List<Task>> getByUserId(@PathVariable ("userId") Integer userId){
         List<Task> tasks = taskService.findByUserId(userId);
