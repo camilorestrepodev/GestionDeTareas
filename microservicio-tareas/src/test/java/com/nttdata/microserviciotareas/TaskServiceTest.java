@@ -64,7 +64,7 @@ class TaskServiceTest {
     }
 
     @Test
-    void testCreateUser() {
+    void testCreateTask() {
         Task task = new Task("Leer", "Todos los libros", LocalDate.of(2023,10,20),3);
 
         when(taskRepository.save(any(Task.class))).thenReturn(task);
@@ -86,7 +86,7 @@ class TaskServiceTest {
     }
 
     @Test
-    void testUpdateUser() {
+    void testUpdateTask() {
         Task task = new Task("Leer", "Todos los libros", LocalDate.of(2023,10,20),3);
 
         when(taskRepository.findById(task.getId())).thenReturn(Optional.of(task));
@@ -103,7 +103,7 @@ class TaskServiceTest {
     }
 
     @Test
-    void testDeleteUser() {
+    void testDeleteTask() {
         Long id = 1L;
         Task task = new Task("Leer", "Todos los libros", LocalDate.of(2023,10,20),3);
         doReturn(Optional.of(task)).when(taskRepository).findById(id);
